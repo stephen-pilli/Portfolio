@@ -142,16 +142,19 @@ class PhotoGallery {
         console.log('Initializing gallery...');
         const galleryGrid = document.querySelector('.gallery-grid');
         if (galleryGrid) {
-            // Keep the fancy loading screen while loading
+            // Always show the fancy loading screen first
             galleryGrid.innerHTML = `
-                <div class="loading-container">
+                <div class="loading-container" style="min-height: 400px; display: flex; align-items: center; justify-content: center;">
                     <div class="loading-animation">
                         <div class="loading-spinner">
                             <i class="fas fa-camera"></i>
                         </div>
                         <div class="loading-text">
-                            <h3>Loading Photo Gallery</h3>
-                            <p>Preparing your visual journey...</p>
+                            <h3 style="font-size: 2.5rem; margin-bottom: 1rem; background: linear-gradient(45deg, #6366f1, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello! I am Stephen Pilli</h3>
+                            <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 1rem;">Welcome to my visual journey...</p>
+                            <div class="loading-message">
+                                <span style="font-size: 1rem; color: #94a3b8;">Loading my photo gallery</span>
+                            </div>
                             <div class="loading-dots">
                                 <span></span>
                                 <span></span>
@@ -161,6 +164,9 @@ class PhotoGallery {
                     </div>
                 </div>
             `;
+            
+            // Force a repaint to ensure loading screen shows
+            galleryGrid.offsetHeight;
             
             try {
                 const html = await this.generateGalleryHTML();
@@ -181,7 +187,7 @@ class PhotoGallery {
                             item.style.transform = 'translateY(0)';
                         }, index * 100);
                     });
-                }, 1500); // Show loading screen for at least 1.5 seconds
+                }, 3000); // Show loading screen for at least 3 seconds
                 
             } catch (error) {
                 console.error('Error generating gallery:', error);
