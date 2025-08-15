@@ -142,10 +142,47 @@ class PhotoGallery {
         console.log('Initializing gallery...');
         const galleryGrid = document.querySelector('.gallery-grid');
         if (galleryGrid) {
+            // Keep the fancy loading screen while loading
+            galleryGrid.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-animation">
+                        <div class="loading-spinner">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="loading-text">
+                            <h3>Loading Photo Gallery</h3>
+                            <p>Preparing your visual journey...</p>
+                            <div class="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
             try {
                 const html = await this.generateGalleryHTML();
                 console.log('Generated HTML for', this.photos.length, 'photos');
-                galleryGrid.innerHTML = html || '<p>No images found in directories.</p>';
+                
+                // Add a smooth transition from loading to gallery
+                setTimeout(() => {
+                    galleryGrid.innerHTML = html || '<p>No images found in directories.</p>';
+                    
+                    // Animate gallery items appearing
+                    const items = galleryGrid.querySelectorAll('.gallery-item');
+                    items.forEach((item, index) => {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            item.style.transition = 'all 0.5s ease';
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    });
+                }, 1500); // Show loading screen for at least 1.5 seconds
+                
             } catch (error) {
                 console.error('Error generating gallery:', error);
                 galleryGrid.innerHTML = '<p>Error loading photos. Please try refreshing the page.</p>';
